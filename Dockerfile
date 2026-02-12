@@ -1,23 +1,22 @@
-FROM node:20-alpine AS builder 
+# Stage 1 - Builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm ci
 
 COPY . .
-
 RUN npx tsc
 
-FROM node:20-alpine
+# Stage 2 - Production
+FROM node:20-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/package*.json ./
+COPY package*.json ./
+RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
-
-RUN npm ci --omit=dev
 
 CMD ["node", "dist/index.js"]
