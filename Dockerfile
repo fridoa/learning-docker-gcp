@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
@@ -18,6 +18,6 @@ COPY --from=builder /app/package*.json ./
 
 COPY --from=builder /app/dist ./dist
 
-RUN npm install --production
+RUN npm ci --omit=dev
 
 CMD ["node", "dist/index.js"]
