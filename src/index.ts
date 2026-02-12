@@ -11,6 +11,14 @@ const redisHost = process.env.REDIS_HOST;
 
 const redisPort = process.env.REDIS_PORT || '6379';
 
+if (!redisHost) {
+  throw new Error("REDIS_HOST environment variable is not defined");
+}
+
+if (isNaN(Number(redisPort))) {
+  throw new Error("REDIS_PORT must be a valid number");
+}
+
 const redisClient = createClient({
   url: `redis://${redisHost}:${redisPort}`
 })
